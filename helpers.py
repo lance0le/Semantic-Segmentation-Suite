@@ -21,7 +21,7 @@ def get_class_dict(csv_path):
         return ValueError("File is not a CSV!")
 
     class_dict = {}
-    with open(csv_path, 'rb') as csvfile:
+    with open(csv_path, 'r') as csvfile:
         file_reader = csv.reader(csvfile, delimiter=',')
         header = next(file_reader)
         for row in file_reader:
