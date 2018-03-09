@@ -405,6 +405,10 @@ elif args.mode == "test":
     if not os.path.isdir("%s"%("Test")):
             os.makedirs("%s"%("Test"))
 
+    # Load the data
+    print("Loading the data ...")
+    train_input_names,train_output_names, val_input_names, val_output_names, test_input_names, test_output_names = prepare_data()
+
     target=open("%s/test_scores.csv"%("Test"),'w')
     target.write("test_name, avg_accuracy, precision, recall, f1 score, mean iou %s\n" % (class_names_string))
     scores_list = []
