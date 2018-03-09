@@ -86,7 +86,7 @@ def prepare_data(dataset_dir=args.dataset):
 def load_image(path):
     img = cv2.imread(path,-1)
     if len(img.shape)==2:
-        image = c2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+        image = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     else:
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return image
