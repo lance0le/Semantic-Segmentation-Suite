@@ -401,6 +401,10 @@ elif args.mode == "test":
     print("Num Classes -->", num_classes)
     print("")
 
+    # Load the data
+    print("Loading the data ...")
+    train_input_names,train_output_names, val_input_names, val_output_names, test_input_names, test_output_names = prepare_data()
+
     # Create directories if needed
     if not os.path.isdir("%s"%("Test")):
             os.makedirs("%s"%("Test"))
