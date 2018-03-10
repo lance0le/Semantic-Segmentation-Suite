@@ -70,7 +70,7 @@ def compute_avg_accuracy(y_pred, y_true):
     for i in range(w):
         for j in range(h):
             if y_pred[i, j] == y_true[i, j]:
-                count = count + 1.0
+                count += 1.0
     return count / total
 
 # Compute the class-specific segmentation accuracy
@@ -86,15 +86,15 @@ def compute_class_accuracies(y_pred, y_true, num_classes):
     for i in range(w):
         for j in range(h):
             if y_pred[i, j] == y_true[i, j]:
-                count[int(y_pred[i, j])] = count[int(y_pred[i, j])] + 1.0
+                count[int(y_pred[i, j])] += 1.0
 
     # If there are no pixels from a certain class in the GT, 
     # it returns NAN because of divide by zero
-    # Replace the nans with a 1.0.
+    # Replace the nans with a -1.0.
     accuracies = []
     for i in range(len(total)):
         if total[i] == 0:
-            accuracies.append(1.0)
+            accuracies.append(-1.0)
         else:
             accuracies.append(count[i] / total[i])
 
@@ -104,22 +104,37 @@ def compute_class_accuracies(y_pred, y_true, num_classes):
 def precision(pred, label):
     TP = np.float(np.count_nonzero(pred * label))
     FP = np.float(np.count_nonzero(pred * (label - 1)))
-    prec = TP / (TP + FP)
-    return prec
+    # if TP and FP are both zero, returns NAN due to divide by zero
+    # Replace the nans with a -1.0.
+    if (TP + FP)==0:
+        return -1.0
+    else:
+        prec = TP / (TP + FP)
+        return prec
 
 # Compute recall
 def recall(pred, label):
     TP = np.float(np.count_nonzero(pred * label))
     FN = np.float(np.count_nonzero((pred - 1) * label))
-    rec = TP / (TP + FN)
-    return rec
+    # if TP and FN are both zero, returns NAN due to divide by zero
+    # Replace the nans with a -1.0.
+    if (TP + FN) == 0:
+        return -1
+    else:
+       rec = TP / (TP + FN)
+       return rec
 
 # Compute f1 score
 def f1score(pred, label):
     prec = precision(pred, label)
     rec = recall(pred, label)
-    f1 = np.divide(2 * prec * rec, (prec + rec))
-    return f1
+    # if prec or rec are zero, divide by zero so output is -1.0
+    # PROCEED_NOTES: put in comments later explaining *why* prec or rec are zero
+    if prec==0 or rec==0:
+        return -1.0
+    else:
+        f1 = np.divide(2 * prec * rec, (prec + rec))
+        return f1
 
 def compute_mean_iou(pred, label):
     w = label.shape[0]
