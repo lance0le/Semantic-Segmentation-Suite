@@ -435,7 +435,7 @@ elif args.mode == "test":
 
         accuracy, class_accuracies, prec, rec, f1, iou = utils.evaluate_segmentation(pred=output_image, gt=gt, num_classes=num_classes)
     
-        file_name = utils.filepath_to_name(val_input_names[ind])
+        file_name = utils.filepath_to_name(test_input_names[ind])
         target.write("%s, %f, %f, %f, %f, %f"%(file_name, accuracy, prec, rec, f1, iou))
         for item in class_accuracies:
             target.write(", %f"%(item))
