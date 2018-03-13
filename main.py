@@ -496,17 +496,17 @@ elif args.mode == "predict":
     print("Image -->", args.image)
     print("")
 
-    input_image = np.expand_dims(np.float32(load_image(test_input_names[ind])[:args.crop_height, :args.crop_width]),axis=0)/255.0
+    input_image = np.expand_dims(np.float32(load_image(args.image)[:args.crop_height, :args.crop_width]),axis=0)/255.0
 
     st = time.time()
     output_image = sess.run(network,feed_dict={input:input_image})
 
     run_time = time.time()-st
-
+    
     output_image = np.array(output_image[0,:,:,:])
     output_image = helpers.reverse_one_hot(output_image)
     out_vis_image = helpers.colour_code_segmentation(output_image, class_dict)
-    cv2.imwrite("%s/%s_pred.png"%("Test", file_name),np.uint8(out_vis_image))
+    cv2.imwrite("%s_pred.png"%(os.path.splitext(args.image)[0]),np.uint8(out_vis_image))
 
 else:
     ValueError("Invalid mode selected.")
