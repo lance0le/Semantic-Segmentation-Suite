@@ -6,6 +6,6 @@ Training took about ~10 hours on Intel Core i7-4790K @ 4.0GHz and NVIDIA GeForce
 
 To predict with new images:
 
-` python main.py --dataset cannabis --mode predict --image [image_name] --crop_height 256 --crop_width 352 --model FRRN-A `
+` python main.py --dataset cannabis --mode predict --image [file] --crop_height 256 --crop_width 352 --model FRRN-A `
 
 Predicted mask will appear in the repo directory. Use `overlay.py` to overlay predicted mask onto original image (will add ability to overlay from command line later).
