@@ -495,18 +495,27 @@ elif args.mode == "predict":
     print("Num Classes -->", num_classes)
     print("Image -->", args.image)
     print("")
-
-    input_image = np.expand_dims(np.float32(load_image(args.image)[:args.crop_height, :args.crop_width]),axis=0)/255.0
-
-    st = time.time()
-    output_image = sess.run(network,feed_dict={input:input_image})
-
-    run_time = time.time()-st
     
-    output_image = np.array(output_image[0,:,:,:])
-    output_image = helpers.reverse_one_hot(output_image)
-    out_vis_image = helpers.colour_code_segmentation(output_image, class_dict)
-    cv2.imwrite("%s_pred.png"%(os.path.splitext(args.image)[0]),np.uint8(out_vis_image))
+    def predict_image(image_name, crop_width, crop_height):
+        input_image = np.expand_dims(np.float32(load_image(image_name)[:crop_height, :crop_width]),axis=0)/255.0
+        output_image = sess.run(network,feed_dict={input:input_image})
+        output_image = np.array(output_image[0,:,:,:])
+        output_image = helpers.reverse_one_hot(output_image)
+        out_vis_image = helpers.colour_code_segmentation(output_image, class_dict)
+        return out_vis_image
+    
+    if os.path.isfile(args.image):
+        out_vis_image = predict_image(args.image, args.crop_width, args.crop_height)
+        cv2.imwrite("Predict/%s_pred.png"%(os.path.splitext(args.image)[0]),np.uint8(out_vis_image))
+    else:
+        n = 0
+        images_all = os.listdir(args.image)
+        for i in images_all:
+            out_vis_image = predict_image(os.path.join(args.image,i), args.crop_width, args.crop_height)
+            cv2.imwrite("Predict/%s_pred.png"%(os.path.splitext(i)[0]),np.uint8(out_vis_image))
+            n+=1
+            sys.stdout.write("\rPredicting image %d / %d"%(n, len(images_all)))
+            sys.stdout.flush()
 
 else:
     ValueError("Invalid mode selected.")
